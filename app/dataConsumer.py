@@ -1,5 +1,7 @@
 import requests
 import json
+
+from requests.api import request
 import app.initials as ini
 
 
@@ -11,6 +13,14 @@ def consumingData():
     dataJson = dataRequest.json()
     treatedData = jsonToDict(dataJson)
     return treatedData
+
+
+#Check if the date on url is the same of the API
+def jsonToDictPerData(date):
+    #import ipdb; ipdb.set_trace()
+    dataRequest = requests.get(f'{baseurl}/daily/{date}')
+    dataJson = dataRequest.json()
+    return dataJson
 
 
 #Store data in [blank] dictionary 
