@@ -8,10 +8,16 @@ def index():
     return "Hello, World!"
 
 
-@app.route('/data')
-@app.route('/data/test')
-def showData():
+@app.route('/general')
+def showCountry():
     test = consumingData()
     #import ipdb; ipdb.set_trace()
     return str(test)
+
+@app.route('/general/<string:state>')
+def showState(state):
+    state = state.upper()
+    test = consumingData()
+    #import ipdb; ipdb.set_trace()
+    return str(test[state])
 

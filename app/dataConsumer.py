@@ -1,11 +1,13 @@
 import requests
 import json
+import app.initials as ini
+
 
 # Consuming COVID API from Brazil
 # To Do: Filter by data 
-
+baseurl = 'https://covid19.mathdro.id/api'
 def consumingData():
-    dataRequest = requests.get('https://covid19.mathdro.id/api/countries/brazil/deaths')
+    dataRequest = requests.get(f'{baseurl}/countries/brazil/deaths')
     dataJson = dataRequest.json()
     treatedData = jsonToDict(dataJson)
     return treatedData
@@ -17,7 +19,7 @@ def jsonToDict(dataJson):
 
     for row in dataJson:
         state = row['provinceState']
-        dictStates[state] = {
+        dictStates[ini.initialStates[state]] = {
             'estado' : row['provinceState'],
             'confirmados' : row['confirmed'],
             'recuperados' : row['recovered'],
