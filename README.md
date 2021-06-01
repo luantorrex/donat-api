@@ -4,8 +4,8 @@
 
 
 # To Do:
+- Consume Google News API;
 - Rate of cases per million of habitants;
 - Use 'lat' and 'long' data for visual insights;
-- Consume Google News API;
 - Register and login system;
 - Autentication method with Twitter or Facebook account;
