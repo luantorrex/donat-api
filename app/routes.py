@@ -1,5 +1,5 @@
 from app import app
-from app.dataConsumer import consumingData, consumingDataPerDate as dpd
+from app.dataConsumer import consumingDataPerDate as dpd
 from datetime import date,timedelta
 
 defaultDay = date.today()-timedelta(days=1)
@@ -12,19 +12,15 @@ def index():
     return "Hello, World!"
 
 
-@app.route('/general')
-def showCountry():
-    data = consumingData()
-    return str(data)
-
-
 @app.route('/state/<string:state>')
-def showState(state):
+@app.route('/state/<string:state>/<string:day>')
+def showState(state,day=defaultDay):
     state = state.upper()
-    data = consumingData()
+    data = dpd(day)
     return str(data[state])
 
 
+@app.route('/general')
 @app.route('/date/')
 @app.route('/date/<string:day>')
 def showDate(day=defaultDay):
