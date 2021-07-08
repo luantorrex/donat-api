@@ -4,7 +4,6 @@
 
 
 # To Do:
-- Rate of cases per million of habitants;
 - Use 'lat' and 'long' data for visual insights;
 - Register and login system;
 - Autentication method with Twitter or Facebook account;
