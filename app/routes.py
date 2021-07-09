@@ -3,9 +3,14 @@ from app.dataConsumer import consumingDataPerDate as dpd
 from app.initials import initialsToState
 from app.news import callGoogle
 from datetime import date,timedelta
+from flask_restful import Api, Resource, reqparse
+from flask_cors import CORS #comment this on deployment
 
 defaultDay = date.today()-timedelta(days=1)
 defaultDay = defaultDay.strftime("%m-%d-%Y")
+
+CORS(app) #comment this on deployment
+api = Api(app)
 
 
 @app.route('/')
