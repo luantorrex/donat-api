@@ -1,6 +1,10 @@
 from enum import unique
 from app import db
+from app import login
 
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 class User(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(64), index=True, unique=True)

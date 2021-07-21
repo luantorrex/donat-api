@@ -2,3 +2,5 @@ venv/
 /.vscode/
 app/__pycache__/
 __pycache__/
+frontend/node_modules
+migrations/

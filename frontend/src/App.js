@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import axios from 'axios'
 
@@ -23,19 +22,18 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
+        <h1>
+          Welcome to Brazil Covid Analysis.
+        </h1>
+      <h2>{lastNews}</h2>
         <a
           className="App-link"
-          href="https://reactjs.org"
+          href="https://github.com/luantorrex/brazil-covid-analysis"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          Our Repository
         </a>
-      <p>{lastNews}</p>
       </header>
     </div>
   );
