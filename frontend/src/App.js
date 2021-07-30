@@ -6,7 +6,7 @@ function App() {
   const [lastNews, setLastNews] = useState(0);
 
   useEffect(()=>{
-  axios.get('http://localhost:5000/index').then(response => {
+  axios.get('http://localhost:5000/news').then(response => {
       setLastNews(response.data)    
     }).catch(error => {
       console.log(error)
@@ -18,14 +18,15 @@ function App() {
   //   });
   // }, []);
 
-
   return (
     <div className="App">
       <header className="App-header">
         <h1>
           Welcome to Brazil Covid Analysis.
         </h1>
-      <h2>{lastNews}</h2>
+
+        <h2 className="News">{lastNews}</h2>
+
         <a
           className="App-link"
           href="https://github.com/luantorrex/brazil-covid-analysis"

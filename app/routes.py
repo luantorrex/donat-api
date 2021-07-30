@@ -5,7 +5,7 @@ from app.news import callGoogle
 from datetime import date,timedelta
 from flask_restful import Api, Resource, reqparse
 from flask_cors import CORS #comment this on deployment
-from flask_login import current_user, login_user, 
+from flask_login import current_user, login_user 
 from app.models import User
 from flask import render_template ,flash, redirect, url_for
 
