@@ -49,6 +49,7 @@ def showNews(state='Brasil'):
         state = initialsToState[state]
     return str(callGoogle(state))
 
+
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
