@@ -17,13 +17,13 @@ api = Api(app)
 
 
 @app.route('/')
-@app.route('/index')
+@app.route('/index/')
 def index():
     return "Hello, World!"
 
 
-@app.route('/state/<string:state>')
-@app.route('/state/<string:state>/<string:day>')
+@app.route('/state/<string:state>/')
+@app.route('/state/<string:state>/<string:day>/')
 def showState(state,day=defaultDay):
     state = state.upper()
     data = dpd(day)
@@ -32,7 +32,7 @@ def showState(state,day=defaultDay):
 
 @app.route('/general/')
 @app.route('/date/')
-@app.route('/date/<string:day>')
+@app.route('/date/<string:day>/')
 def showDate(day=defaultDay):
     data = dpd(day)
     #import ipdb; ipdb.set_trace()
@@ -40,7 +40,7 @@ def showDate(day=defaultDay):
 
 
 @app.route('/news/')
-@app.route('/news/<string:state>')
+@app.route('/news/<string:state>/')
 def showNews(state='Brasil'):
     state = state.upper()
     if state not in initialsToState:
@@ -52,20 +52,12 @@ def showNews(state='Brasil'):
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
-            return redirect(url_for('login'))
-        login_user(user, remember=form.remember_me.data)
-        return redirect(url_for('index'))
-    return render_template('login.html', title='Sign In', form=form)
+   return "Login!"
 
-
-@app.route('/logout')
+@app.route('/logout/')
 def logout():
-    logout_user()
     return redirect(url_for('index'))
+
+@app.route('/register/', methods=['POST'])
+def register():
+   return "Register!"
