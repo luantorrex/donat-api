@@ -13,9 +13,10 @@ class EmploymentGenderEnum(enum.Enum):
     female = 'female'
 class User(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	username = db.Column(db.String(64), index=True, unique=True)
+	full_name = db.Column(db.String(64), index=True, unique=True)
 	email = db.Column(db.String(120), index=True, unique=True)
 	password_hash = db.Column(db.String(128))
+	address = db.Column(db.String(120), nullable=False)
 	gender = db.Column(
 		db.Enum(EmploymentGenderEnum), 
         	default="-",
@@ -23,5 +24,12 @@ class User(db.Model):
 	)
 
 	def __repr__(self):
-	    return '<User {}>'.format(self.username)
-	
+	    return '<User {}>'.format(self.full_name)
+class Instituicao(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(64), index=True, unique=True)
+	email = db.Column(db.String(120), index=True, unique=True)
+	address = db.Column(db.String(120), nullable=False)
+
+	def __repr__(self):
+	    return '<Name {}>'.format(self.name)
