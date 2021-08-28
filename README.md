@@ -1,9 +1,9 @@
-﻿# COVID BRAZIL ANALYSIS :mask:
+﻿# Donation Care Plataform API :mask:
 
-- Consuming API for data analysis :chart_with_downwards_trend:
+- API for DCP :computer:
 
 
 # To Do:
-- Use 'lat' and 'long' data for visual insights;
-- Register and login system;
-- Autentication method with Twitter or Facebook account;
+- [] Google News full implementation;
+- [X] Register and login system;
+- [] Autentication method with Twitter or Facebook account;
