@@ -1,17 +1,25 @@
 from enum import unique
 from app import db
-from app import login
 import enum
+import json
+from dataclasses import dataclass
+from flask import jsonify
 
-@login.user_loader
-def load_user(id):
-    return User.query.get(int(id))
 
 class EmploymentGenderEnum(enum.Enum):
     default = 'default'
     male = 'male'
     female = 'female'
+
+@dataclass
 class User(db.Model):
+	id: int
+	full_name: str
+	email: str
+	password_hash: str
+	address : str 
+	# gender: str
+
 	id = db.Column(db.Integer, primary_key=True)
 	full_name = db.Column(db.String(64), index=True, unique=True)
 	email = db.Column(db.String(120), index=True, unique=True)
