@@ -4,6 +4,6 @@
 
 
 # To Do:
-- [] Google News full implementation;
+- [ ] Google News full implementation;
 - [X] Register and login system;
-- [] Autentication method with Twitter or Facebook account;
+- [ ] Autentication method with Twitter or Facebook account;
