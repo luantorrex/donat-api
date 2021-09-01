@@ -8,7 +8,6 @@ import json
 from flask_restful import Api, Resource, reqparse
 from flask_cors import CORS #comment this on deployment
 from flask import redirect, url_for, request, jsonify
-import bcrypt
 from sqlalchemy.exc import IntegrityError
 
 
@@ -46,6 +45,18 @@ def showNews(state='Brasil'):
         state = initialsToState[state]
     return str(callGoogle(state))
 
+class Instituicao(Resource):
+    def get (self):
+        inst = Instituicao.query.all()
+        return inst
+
+api.add_resource(Instituicao, '/instituicao')
+class InstituicaoById(Resource):
+    def get (self, id):
+        inst = Instituicao.query.filter_by(id=id)
+        return inst
+
+api.add_resource(InstituicaoById, '/instituicao/<string:id>')
 class Register(Resource):
     # def get (self):
     #     users = User.query.all()
@@ -60,9 +71,8 @@ class Register(Resource):
             address = request.json.get('address', None)
             gender = request.json.get('gender', None)
 
-            hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
-            user = User(full_name=name, email=email, password_hash=hashed, address=address, gender=gender)
+            user = User(full_name=name, email=email, password_hash=password, address=address, gender=gender)
             
             db.session.add(user)
             db.session.commit()
@@ -93,7 +103,7 @@ class Login(Resource):
                 if not user:
                     return 'User Not Found!', 404
             
-                if bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
+                if (password == user.password_hash):
                     return f'Welcome back {user.full_name}'
                 return "Wrong Password!"
             except :
