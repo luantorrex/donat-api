@@ -6,3 +6,4 @@ frontend/node_modules
 migrations/
 /migrations/
 db.sqlite3
+storage.db

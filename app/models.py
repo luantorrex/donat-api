@@ -4,10 +4,7 @@ import enum
 import json
 from dataclasses import dataclass
 from flask import jsonify
-from sqlalchemy_utils import PhoneNumber, PasswordType
-
-
-
+from sqlalchemy_utils import PhoneNumber, PasswordType, URLType
 
 class EmploymentGenderEnum(enum.Enum):
     male = 'male'
@@ -38,7 +35,6 @@ class User(db.Model):
 	address = db.Column(db.String(120), nullable=False)
 	gender = db.Column(db.Enum(EmploymentGenderEnum), nullable=False)
 	_phone_number = db.Column(db.Unicode(20))
-	# 
 
 	phone_number = db.composite(
 		PhoneNumber,
@@ -64,7 +60,7 @@ class Instituicao(db.Model):
 	name = db.Column(db.String(64), index=True, unique=True)
 	email = db.Column(db.String(120), index=True, unique=True)
 	address = db.Column(db.String(120), nullable=False)
-	# url = db.Column()
+	url = db.Column(URLType)
 	# media = db.Column()
 	_phone_number = db.Column(db.Unicode(20))
 
