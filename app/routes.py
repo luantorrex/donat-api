@@ -18,19 +18,19 @@ CORS(app) #comment this on deployment
 api = Api(app)
 
 
-@app.route('/api/state/<string:state>')
-@app.route('/api/state/<string:state>/<string:day>')
-def showState(state,day=defaultDay):
-    state = state.upper()
-    data = dpd(day)
-    return str(data[state])
+# @app.route('/api/state/<string:state>')
+# @app.route('/api/state/<string:state>/<string:day>')
+# def showState(state,day=defaultDay):
+#     state = state.upper()
+#     data = dpd(day)
+#     return str(data[state])
 
-@app.route('/api/date')
-@app.route('/api/date/<string:day>')
-def showDate(day=defaultDay):
-    data = dpd(day)
-    #import ipdb; ipdb.set_trace()
-    return str(data)
+# @app.route('/api/date')
+# @app.route('/api/date/<string:day>')
+# def showDate(day=defaultDay):
+#     data = dpd(day)
+#     #import ipdb; ipdb.set_trace()
+#     return str(data)
 
 
 @app.route('/api/news')
@@ -120,23 +120,19 @@ class InstituicaoById(Resource):
 api.add_resource(InstituicaoById, '/api/instituicao/<string:id>')
 
 
-
 class Register(Resource):
-    # def get (self):
-    #     users = User.query.all()
-    #     # print(users.id)
-    #     # users.password_hash.decode('utf-8')
-    #     return jsonify(users)
     def post (self):
         try:
             name = request.json.get('name', None)
+            admin = request.json.get('admin', None)
             email = request.json.get('email', None)
             password = request.json.get('password', None)
             address = request.json.get('address', None)
             gender = request.json.get('gender', None)
+            phone_number = request.json.get('phone_number', None)
 
 
-            user = u(full_name=name, email=email, password_hash=password, address=address, gender=gender)
+            user = u(full_name=name, admin=admin, email=email, phone_number = phone_number, password_hash=password, address=address, gender=gender)
             
             db.session.add(user)
             db.session.commit()

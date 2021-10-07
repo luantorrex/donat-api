@@ -1,4 +1,8 @@
+import datetime
 from enum import unique
+
+from flask.sessions import NullSession
+from marshmallow.fields import Boolean
 from app import db, ma
 import enum
 import json
@@ -12,7 +16,6 @@ class EmploymentGenderEnum(enum.Enum):
 
 @dataclass
 class User(db.Model):
-	#data class thing
 	id: int
 	full_name: str
 	email: str
@@ -23,6 +26,9 @@ class User(db.Model):
 
 	__tablename__ = 'user'
 	id = db.Column(db.Integer, primary_key=True)
+	admin = db.Column(db.Boolean, nullable=False)
+	created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+   	updated = db.Column(db.DateTime, onupdate=datetime.utcnow)
 	full_name = db.Column(db.String(64), index=True, unique=True)
 	email = db.Column(db.String(120), index=True, unique=True)
 	password_hash = db.Column(PasswordType(
@@ -54,6 +60,7 @@ class Instituicao(db.Model):
 	name: str
 	email: str
 	address : str 
+	cep: str
 	
 	__tablename__ = 'instituicao'
 	id = db.Column(db.Integer, primary_key=True)
@@ -61,7 +68,8 @@ class Instituicao(db.Model):
 	email = db.Column(db.String(120), index=True, unique=True)
 	address = db.Column(db.String(120), nullable=False)
 	url = db.Column(URLType)
-	# media = db.Column()
+	cep = db.Column(db.String(8), nullable=False)
+	# criar coluna futura para armazenar imagem da instituicao
 	_phone_number = db.Column(db.Unicode(20))
 
 	phone_number = db.composite(
@@ -71,5 +79,3 @@ class Instituicao(db.Model):
 
 	def __repr__(self):
 	    return '<Name {}>'.format(self.name)
-
-# Nova table relacionada aos parceiros do site.
