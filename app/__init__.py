@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, url_for, redirect, session
 # from app.routes import Instituicao
 from config import Config
-# from flask_sqlalchemy import SQLAlchemy
-# from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from flask_marshmallow import Marshmallow
 import pymongo
 
@@ -27,6 +27,7 @@ if __name__ == "__main__":
 # records = db.register
 
 
-# db = SQLAlchemy(app)
-# migrate = Migrate(app, db)
-# ma = Marshmallow(app)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+ma = Marshmallow(app)
+from app import routes

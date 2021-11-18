@@ -2,7 +2,7 @@ from app import app, db, users, institutions
 from app.dataConsumer import consumingDataPerDate as dpd
 from app.initials import initialsToState
 from app.news import callGoogle
-# from app.models import User as u,Instituicao as inst, UserSchema
+# from app.models import User as u, Instituicao as inst, UserSchema
 from datetime import date, timedelta
 import json
 import bcrypt
@@ -28,10 +28,10 @@ def index():
     if request.method == "POST":
         user = request.form.get("fullname")
         email = request.form.get("email")
-        
+
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
-        
+
         user_found = users.find_one({"name": user})
         email_found = users.find_one({"email": email})
         if user_found:
@@ -47,12 +47,13 @@ def index():
             hashed = bcrypt.hashpw(password2.encode('utf-8'), bcrypt.gensalt())
             user_input = {'name': user, 'email': email, 'password': hashed}
             users.insert_one(user_input)
-            
+
             user_data = users.find_one({"email": email})
             new_email = user_data['email']
-   
+
             return render_template('logged_in.html', email=new_email)
     return render_template('index.html')
+
 
 @app.route('/logged_in')
 def logged_in():
@@ -86,132 +87,140 @@ def showNews(state='Brasil'):
         state = initialsToState[state]
     return str(callGoogle(state))
 
-user_schema = UserSchema()
-users_schema = UserSchema(many=True)
+
+# user_schema = UserSchema()
+# users_schema = UserSchema(many=True)
 
 
-class User(Resource):
-    def get (self):
-        print('teste')
-        all_users = u.query.all()
-        return jsonify(users_schema.dump(all_users))
-        # return jsonify(result)
-
-api.add_resource(User, '/api/user')
+# class User(Resource):
+#     def get(self):
+#         print('teste')
+#         all_users = u.query.all()
+#         return jsonify(users_schema.dump(all_users))
+#         # return jsonify(result)
 
 
-class UserById(Resource):
-    def get (self,id):
-        print('teste')
-        user = u.query.filter_by(id=id)
-        return jsonify(user_schema.dump(user))
-
-api.add_resource(UserById, '/api/user/<string:id>')
+# api.add_resource(User, '/api/user')
 
 
-class Instituicao(Resource):
-    def get (self):
-        instituicao = inst.query.all()
-        return instituicao 
-
-    def post (self):
-        try:
-            name = request.json.get('name', None)
-            email = request.json.get('email', None)
-            address = request.json.get('address', None)
-            url = request.json.get('url', None)
-            phone_number = request.json.get('phone_number', None)
-
-            instituicao = inst(name=name, email=email, address=address, url=url, phone_number=phone_number)
-            
-            db.session.add(instituicao)
-            db.session.commit()
-            
-            return "Registered!"
-
-        except IntegrityError:
-            return "Integrity Error",400
-
-api.add_resource(Instituicao, '/api/instituicao')
+# class UserById(Resource):
+#     def get(self, id):
+#         print('teste')
+#         user = u.query.filter_by(id=id)
+#         return jsonify(user_schema.dump(user))
 
 
-class InstituicaoById(Resource):
-    def get (self, id):
-        instituicao = inst.query.filter_by(id=id).first()
-        return instituicao 
-
-    def post (self):
-        try:
-            name = request.json.get('name', None)
-            email = request.json.get('email', None)
-            address = request.json.get('address', None)
-            url = request.json.get('url', None)
-            phone_number = request.json.get('phone_number', None)
+# api.add_resource(UserById, '/api/user/<string:id>')
 
 
-            instituicao = inst(name=name, email=email, address=address, url=url, phone_number=phone_number)
-            
-            db.session.add(instituicao)
-            db.session.commit()
-            
-            return "Registered!"
-        # melhor forma de fazer o except
-        # ele da except tanto quando os mesmos dados são passados, tanto quando falta algum atributo.    
-        except IntegrityError:
-            return "Integrity Error",400
+# class Instituicao(Resource):
+#     def get(self):
+#         instituicao = inst.query.all()
+#         return instituicao
 
-api.add_resource(InstituicaoById, '/api/instituicao/<string:id>')
+#     def post(self):
+#         try:
+#             name = request.json.get('name', None)
+#             email = request.json.get('email', None)
+#             address = request.json.get('address', None)
+#             url = request.json.get('url', None)
+#             phone_number = request.json.get('phone_number', None)
 
+#             instituicao = inst(
+#                 name=name, email=email, address=address, url=url, phone_number=phone_number)
 
-class Register(Resource):
-    def post (self):
-        try:
-            name = request.json.get('name', None)
-            admin = request.json.get('admin', None)
-            email = request.json.get('email', None)
-            password = request.json.get('password', None)
-            address = request.json.get('address', None)
-            gender = request.json.get('gender', None)
-            phone_number = request.json.get('phone_number', None)
+#             db.session.add(instituicao)
+#             db.session.commit()
 
+#             return "Registered!"
 
-            user = u(full_name=name, admin=admin, email=email, phone_number = phone_number, password_hash=password, address=address, gender=gender)
-            
-            db.session.add(user)
-            db.session.commit()
-            
-            return "Registered!"
-        # melhor forma de fazer o except
-        # ele da except tanto quando os mesmos dados são passados, tanto quando falta algum atributo.    
-        except IntegrityError:
-            return "Integrity Error",400
-
-api.add_resource(Register, '/api/register')
+#         except IntegrityError:
+#             return "Integrity Error", 400
 
 
-class Login(Resource):
-        def post(self):
-            try:
-                email = request.json.get('email', None)
-                password = request.json.get('password', None)
+# api.add_resource(Instituicao, '/api/instituicao')
 
-                if not email:
-                    return 'Missing e-mail!', 400
-                if not password:
-                    return 'Missing Password!', 400
-            
-                user = u.query.filter_by(email=email).first()
 
-                if not user:
-                    return 'User Not Found!', 404
-            
-                if (password == user.password_hash):
-                    return f'Welcome back {user.full_name}'
-                return "Wrong Password!"
-            except :
-               return "Please provide an email and a password", 400
+# class InstituicaoById(Resource):
+#     def get(self, id):
+#         instituicao = inst.query.filter_by(id=id).first()
+#         return instituicao
 
-api.add_resource(Login, '/api/login')
+#     def post(self):
+#         try:
+#             name = request.json.get('name', None)
+#             email = request.json.get('email', None)
+#             address = request.json.get('address', None)
+#             url = request.json.get('url', None)
+#             phone_number = request.json.get('phone_number', None)
+
+#             instituicao = inst(
+#                 name=name, email=email, address=address, url=url, phone_number=phone_number)
+
+#             db.session.add(instituicao)
+#             db.session.commit()
+
+#             return "Registered!"
+#         # melhor forma de fazer o except
+#         # ele da except tanto quando os mesmos dados são passados, tanto quando falta algum atributo.
+#         except IntegrityError:
+#             return "Integrity Error", 400
+
+
+# api.add_resource(InstituicaoById, '/api/instituicao/<string:id>')
+
+
+# class Register(Resource):
+#     def post(self):
+#         try:
+#             name = request.json.get('name', None)
+#             admin = request.json.get('admin', None)
+#             email = request.json.get('email', None)
+#             password = request.json.get('password', None)
+#             address = request.json.get('address', None)
+#             gender = request.json.get('gender', None)
+#             phone_number = request.json.get('phone_number', None)
+
+#             user = u(full_name=name, admin=admin, email=email, phone_number=phone_number,
+#                      password_hash=password, address=address, gender=gender)
+
+#             db.session.add(user)
+#             db.session.commit()
+
+#             return "Registered!"
+#         # melhor forma de fazer o except
+#         # ele da except tanto quando os mesmos dados são passados, tanto quando falta algum atributo.
+#         except IntegrityError:
+#             return "Integrity Error", 400
+
+
+# api.add_resource(Register, '/api/register')
+
+
+# class Login(Resource):
+#     def post(self):
+#         try:
+#             email = request.json.get('email', None)
+#             password = request.json.get('password', None)
+
+#             if not email:
+#                 return 'Missing e-mail!', 400
+#             if not password:
+#                 return 'Missing Password!', 400
+
+#             user = u.query.filter_by(email=email).first()
+
+#             if not user:
+#                 return 'User Not Found!', 404
+
+#             if (password == user.password_hash):
+#                 return f'Welcome back {user.full_name}'
+#             return "Wrong Password!"
+#         except:
+#             return "Please provide an email and a password", 400
+
+
+# api.add_resource(Login, '/api/login')
 
 
 @app.route('/api/logout')
