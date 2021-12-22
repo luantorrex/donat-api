@@ -1,54 +1,36 @@
 # import datetime
-# from enum import unique
-
-# from flask.sessions import NullSession
 # from marshmallow.fields import Boolean
-# from app import db, ma
-# import enum
+from datetime import datetime
+import enum
+from bson.json_util import default
+import mongoengine as me
 # import json
 # from dataclasses import dataclass
 # from flask import jsonify
-# from sqlalchemy_utils import PhoneNumber, PasswordType, URLType
 
 
-# class EmploymentGenderEnum(enum.Enum):
-#     male = 'male'
-#     female = 'female'
+class GenderEnum(enum.Enum):
+    MALE = 'male'
+    FEMALE = 'female'
 
 
-# @dataclass
-# class User(db.Model):
-#     id: int
-#     full_name: str
-#     email: str
-#     password_hash: str
-#     address: str
-#     gender: str
-#     phone_number: int
-
+class User(me.Document):
 #     __tablename__ = 'user'
-#     id = db.Column(db.Integer, primary_key=True)
-#     admin = db.Column(db.Boolean, nullable=False)
-#     created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-#     updated = db.Column(db.DateTime, onupdate=datetime.utcnow)
-#     full_name = db.Column(db.String(64), index=True, unique=True)
-#     email = db.Column(db.String(120), index=True, unique=True)
-#     password_hash = db.Column(PasswordType(
-#         schemes=[
-#             'pbkdf2_sha512',
-#             'md5_crypt'
-#         ],
-#         deprecated=['md5_crypt']
-#     ))
-#     address = db.Column(db.String(120), nullable=False)
-#     gender = db.Column(db.Enum(EmploymentGenderEnum), nullable=False)
-#     _phone_number = db.Column(db.Unicode(20))
-
-#     phone_number = db.composite(
-#         PhoneNumber,
-#         _phone_number,
-#     )
-
+     admin = me.BooleanField(default=0)
+     created_at = me.DateTimeField(default=datetime.utcnow)
+     updated_at = me.DateTimeField(default=datetime.utcnow)
+     full_name = me.StringField(required=True)
+     email = me.EmailField(unique=True, required=True)
+     password = me.StringField()
+     address = me.StringField(required=True)
+     phone_number = me.StringField(required=True)
+     gender = me.EnumField(GenderEnum, required=True)
+     def to_json(self):
+        return {"name": self.full_name,
+                "email": self.email,
+		"address": self.address,
+		"phone_number": self.phone_number,
+		"gender": self.gender}
 #     def __repr__(self):
 #         return '<User {}>'.format(self.full_name)
 
@@ -75,6 +57,7 @@
 #     url = db.Column(URLType)
 #     cep = db.Column(db.String(8), nullable=False)
 #     # criar coluna futura para armazenar imagem da instituicao
+#     db.ImageField(https://mongoengine-odm.readthedocs.io/apireference.html#mongoengine.fields.ImageField)
 #     _phone_number = db.Column(db.Unicode(20))
 
 #     phone_number = db.composite(

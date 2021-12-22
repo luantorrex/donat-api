@@ -1,15 +1,15 @@
-from app import app, db, users, institutions
+from flask.wrappers import Response
+from app import app 
 from app.dataConsumer import consumingDataPerDate as dpd
 from app.initials import initialsToState
 from app.news import callGoogle
-# from app.models import User as u, Instituicao as inst, UserSchema
 from datetime import date, timedelta
 import json
 import bcrypt
 from flask_restful import Api, Resource, reqparse
 # from flask_cors import CORS #comment this on deployment
 from flask import redirect, url_for, request, jsonify, render_template, session
-from sqlalchemy.exc import IntegrityError
+from app.models import User
 
 
 defaultDay = date.today()-timedelta(days=1)
@@ -19,49 +19,39 @@ defaultDay = defaultDay.strftime("%m-%d-%Y")
 api = Api(app)
 
 
-@app.route('/', methods=['post', 'get'])
-def index():
-    print('tezte nyebjfasdjfa feua')
-    message = ''
-    if "email" in session:
-        return redirect(url_for("logged_in"))
-    if request.method == "POST":
-        user = request.form.get("fullname")
-        email = request.form.get("email")
+class Index(Resource):
+    # if "email" in session:
+    #     return redirect(url_for("logged_in"))
+    def post(self): 
+        print('request', json.loads(request.data))
+        print('self', self)
+        admin = self.admin 
+        name = self.name
+        email = self.email
+        password = self.password
+        address = self.address
+        phone_number = self.phone_number
+        gender = self.gender
 
-        password1 = request.form.get("password1")
-        password2 = request.form.get("password2")
+        user_found = User.objects(full_name__in=[name]).first()
+        email_found = User.objects(email__in=[email]).first()
 
-        user_found = users.find_one({"name": user})
-        email_found = users.find_one({"email": email})
+        hashed = bcrypt.hashpw(password, bcrypt.gensalt())
         if user_found:
-            message = 'There already is a user by that name'
-            return render_template('index.html', message=message)
+            return 'There already is a user by that name'
         if email_found:
-            message = 'This email already exists in database'
-            return render_template('index.html', message=message)
-        if password1 != password2:
-            message = 'Passwords should match!'
-            return render_template('index.html', message=message)
+            return 'This email already exists in database'
+        if not bcrypt.checkpw(password, hashed):
+            return 'Passwords should match!'
         else:
-            hashed = bcrypt.hashpw(password2.encode('utf-8'), bcrypt.gensalt())
-            user_input = {'name': user, 'email': email, 'password': hashed}
-            users.insert_one(user_input)
-
-            user_data = users.find_one({"email": email})
-            new_email = user_data['email']
-
-            return render_template('logged_in.html', email=new_email)
-    return render_template('index.html')
+            print('tipo', type(hashed))
+            user_input = User(admin = admin, name = name, email= email, password = hashed, address = address, phone_number = phone_number, gender = gender)            
+            user_input.save()
+            return 'User created'
+    
+api.add_resource(Index, '/')
 
 
-@app.route('/logged_in')
-def logged_in():
-    if "email" in session:
-        email = session["email"]
-        return render_template('logged_in.html', email=email)
-    else:
-        return redirect(url_for("login"))
 # @app.route('/api/state/<string:state>')
 # @app.route('/api/state/<string:state>/<string:day>')
 # def showState(state,day=defaultDay):
@@ -88,17 +78,11 @@ def showNews(state='Brasil'):
     return str(callGoogle(state))
 
 
-# user_schema = UserSchema()
-# users_schema = UserSchema(many=True)
-
-
 # class User(Resource):
 #     def get(self):
 #         print('teste')
 #         all_users = u.query.all()
 #         return jsonify(users_schema.dump(all_users))
-#         # return jsonify(result)
-
 
 # api.add_resource(User, '/api/user')
 
