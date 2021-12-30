@@ -1,55 +1,37 @@
-from flask.wrappers import Response
 from app import app 
 from app.dataConsumer import consumingDataPerDate as dpd
 from app.initials import initialsToState
 from app.news import callGoogle
 from datetime import date, timedelta
 import json
-import bcrypt
+# import bcrypt
 from flask_restful import Api, Resource, reqparse
 # from flask_cors import CORS #comment this on deployment
 from flask import redirect, url_for, request, jsonify, render_template, session
 from app.models import User
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 defaultDay = date.today()-timedelta(days=1)
 defaultDay = defaultDay.strftime("%m-%d-%Y")
 
-# CORS(app) #comment this on deployment
 api = Api(app)
 
 
-class Index(Resource):
-    # if "email" in session:
-    #     return redirect(url_for("logged_in"))
-    def post(self): 
-        print('request', json.loads(request.data))
-        print('self', self)
-        admin = self.admin 
-        name = self.name
-        email = self.email
-        password = self.password
-        address = self.address
-        phone_number = self.phone_number
-        gender = self.gender
+# @app.route('/api/state/<string:state>')
+# @app.route('/api/state/<string:state>/<string:day>')
+# def showState(state,day=defaultDay):
+#     state = state.upper()
+#     data = dpd(day)
+#     return str(data[state])
 
-        user_found = User.objects(full_name__in=[name]).first()
-        email_found = User.objects(email__in=[email]).first()
+# @app.route('/api/date')
+# @app.route('/api/date/<string:day>')
+# def showDate(day=defaultDay):
+#     data = dpd(day)
+#     #import ipdb; ipdb.set_trace()
+#     return str(data)
 
-        hashed = bcrypt.hashpw(password, bcrypt.gensalt())
-        if user_found:
-            return 'There already is a user by that name'
-        if email_found:
-            return 'This email already exists in database'
-        if not bcrypt.checkpw(password, hashed):
-            return 'Passwords should match!'
-        else:
-            print('tipo', type(hashed))
-            user_input = User(admin = admin, name = name, email= email, password = hashed, address = address, phone_number = phone_number, gender = gender)            
-            user_input.save()
-            return 'User created'
-    
-api.add_resource(Index, '/')
 
 
 # @app.route('/api/state/<string:state>')
@@ -76,26 +58,6 @@ def showNews(state='Brasil'):
     else:
         state = initialsToState[state]
     return str(callGoogle(state))
-
-
-# class User(Resource):
-#     def get(self):
-#         print('teste')
-#         all_users = u.query.all()
-#         return jsonify(users_schema.dump(all_users))
-
-# api.add_resource(User, '/api/user')
-
-
-# class UserById(Resource):
-#     def get(self, id):
-#         print('teste')
-#         user = u.query.filter_by(id=id)
-#         return jsonify(user_schema.dump(user))
-
-
-# api.add_resource(UserById, '/api/user/<string:id>')
-
 
 # class Instituicao(Resource):
 #     def get(self):
@@ -154,59 +116,61 @@ def showNews(state='Brasil'):
 # api.add_resource(InstituicaoById, '/api/instituicao/<string:id>')
 
 
-# class Register(Resource):
-#     def post(self):
-#         try:
-#             name = request.json.get('name', None)
-#             admin = request.json.get('admin', None)
-#             email = request.json.get('email', None)
-#             password = request.json.get('password', None)
-#             address = request.json.get('address', None)
-#             gender = request.json.get('gender', None)
-#             phone_number = request.json.get('phone_number', None)
+class Register(Resource):
+    def post(self): 
+        name = request.json.get('full_name', None)
+        email = request.json.get('email', None)
+        password = request.json.get('password', None)
+        address = request.json.get('address', None)
+        phone_number = request.json.get('phone_number', None)
+        gender = request.json.get('gender', None)
 
-#             user = u(full_name=name, admin=admin, email=email, phone_number=phone_number,
-#                      password_hash=password, address=address, gender=gender)
+        user_found = User.objects(full_name__in=[name]).first()
+        email_found = User.objects(email__in=[email]).first()
 
-#             db.session.add(user)
-#             db.session.commit()
+        if user_found:
+            return 'There already is a user by that name'
+        if email_found:
+            return 'This email already exists in database'
+        else:
+            user_input = User(full_name = name, email= email, password = generate_password_hash(password), address = address, phone_number = phone_number, gender = gender)            
+            user_input.save()
+            return jsonify({'result': 'User created!'})
 
-#             return "Registered!"
-#         # melhor forma de fazer o except
-#         # ele da except tanto quando os mesmos dados são passados, tanto quando falta algum atributo.
-#         except IntegrityError:
-#             return "Integrity Error", 400
-
-
-# api.add_resource(Register, '/api/register')
+api.add_resource(Register, '/api/register')
 
 
-# class Login(Resource):
-#     def post(self):
-#         try:
-#             email = request.json.get('email', None)
-#             password = request.json.get('password', None)
+class Login(Resource):
+    def post(self):
+        try:
+            email = request.json.get('email', None)
+            password = request.json.get('password', None)
+            
+            if not email:
+                return 'Missing e-mail!', 400
+            if not password:
+                return 'Missing Password!', 400
 
-#             if not email:
-#                 return 'Missing e-mail!', 400
-#             if not password:
-#                 return 'Missing Password!', 400
+            user_found = User.objects(email__in=[email]).first()
 
-#             user = u.query.filter_by(email=email).first()
+            if not user_found:
+                return 'User Not Found!', 404
+            
+            if check_password_hash(user_found.password, password):
+                session['logged_in'] = True
+                status = True         
+            else:
+                status = False
+            return jsonify({'result': status})
+        except:
+            return "Please provide an email and a password", 400
 
-#             if not user:
-#                 return 'User Not Found!', 404
-
-#             if (password == user.password_hash):
-#                 return f'Welcome back {user.full_name}'
-#             return "Wrong Password!"
-#         except:
-#             return "Please provide an email and a password", 400
-
-
-# api.add_resource(Login, '/api/login')
+api.add_resource(Login, '/api/login')
 
 
-@app.route('/api/logout')
-def logout():
-    return redirect(url_for('index'))
+class Logout(Resource):
+    def post(self):
+        session.pop('logged_in', None)
+        return jsonify({'result': 'success'})
+
+api.add_resource(Logout, '/api/logout')

@@ -15,8 +15,7 @@ class GenderEnum(enum.Enum):
 
 
 class User(me.Document):
-#     __tablename__ = 'user'
-     admin = me.BooleanField(default=0)
+    
      created_at = me.DateTimeField(default=datetime.utcnow)
      updated_at = me.DateTimeField(default=datetime.utcnow)
      full_name = me.StringField(required=True)
@@ -31,39 +30,29 @@ class User(me.Document):
 		"address": self.address,
 		"phone_number": self.phone_number,
 		"gender": self.gender}
+
 #     def __repr__(self):
 #         return '<User {}>'.format(self.full_name)
 
 
-# class UserSchema(ma.Schema):
-#     class Meta:
-#         fields = ("id", "full_name", "email",
-#                   "address", "gender", "phone_number")
+class Instituicao(me.Document):
 
-
-# @dataclass
-# class Instituicao(db.Model):
-#     id: int
-#     name: str
-#     email: str
-#     address: str
-#     cep: str
-
-#     __tablename__ = 'instituicao'
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(64), index=True, unique=True)
-#     email = db.Column(db.String(120), index=True, unique=True)
-#     address = db.Column(db.String(120), nullable=False)
-#     url = db.Column(URLType)
-#     cep = db.Column(db.String(8), nullable=False)
-#     # criar coluna futura para armazenar imagem da instituicao
-#     db.ImageField(https://mongoengine-odm.readthedocs.io/apireference.html#mongoengine.fields.ImageField)
-#     _phone_number = db.Column(db.Unicode(20))
-
-#     phone_number = db.composite(
-#         PhoneNumber,
-#         _phone_number,
-#     )
+    name = me.StringField()
+    email = me.EmailField(unique=True, required=True)
+    address = me.StringField(required=True)
+    url = me.URLField()
+    cep = me.StringField()
+#   testar o armazenamento de imagens posteriormente.
+#   image = db.ImageField(size=(800, 600, True))
+    phone_number = me.StringField(required=True)
 
 #     def __repr__(self):
 #         return '<Name {}>'.format(self.name)
+    def to_json(self):
+        return {"name": self.name,
+                "email": self.email,
+		        "address": self.address,
+                "url": self.url,
+                "cep": self.cep,
+		        "phone_number": self.phone_number,
+		        }
