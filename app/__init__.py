@@ -1,12 +1,17 @@
-from flask import Flask
-from config import Config
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from flask_marshmallow import Marshmallow
+from flask import Flask, render_template, request, url_for, redirect, session
+from flask_mongoengine import MongoEngine
 
 
 app = Flask(__name__)
-app.config.from_object(Config)
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-ma = Marshmallow(app)
+
+app.secret_key = "testing"
+app.config['MONGODB_SETTINGS'] = {
+  'host': 'mongodb+srv://donatAdmin:p4KQ4EmLoLBm83ga@donat-cluster.jd6pl.mongodb.net/Donat?retryWrites=true&w=majority'
+}
+db = MongoEngine()
+db.init_app(app)
+
+if __name__ == "__main__":
+  app.run()
+
+from app import routes
