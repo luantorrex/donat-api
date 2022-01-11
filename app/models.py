@@ -43,7 +43,7 @@ class Instituicao(me.Document):
     url = me.URLField()
     cep = me.StringField()
 #   testar o armazenamento de imagens posteriormente.
-#   image = db.ImageField(size=(800, 600, True))
+#   image = me.ImageField(size=(800, 600, True))
     phone_number = me.StringField(required=True)
 
 #     def __repr__(self):

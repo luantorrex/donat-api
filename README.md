@@ -4,6 +4,7 @@
 
 
 # To Do:
-- [ ] Google News full implementation;
+- [X] Google News full implementation;
 - [X] Register and login system;
+- [] Deploy on Heroku;
 - [ ] Autentication method with Twitter or Facebook account;
