@@ -8,7 +8,7 @@ import json
 from flask_restful import Api, Resource, reqparse
 # from flask_cors import CORS #comment this on deployment
 from flask import redirect, url_for, request, jsonify, render_template, session
-from app.models import User
+from app.models import User, Instituicao
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -59,71 +59,51 @@ def showNews(state='Brasil'):
         state = initialsToState[state]
     return str(callGoogle(state))
 
-# class Instituicao(Resource):
-#     def get(self):
-#         instituicao = inst.query.all()
-#         return instituicao
+class RegisterInstituicao(Resource):
+    def post(self):
+        body = json.loads(request.data)
 
-#     def post(self):
-#         try:
-#             name = request.json.get('name', None)
-#             email = request.json.get('email', None)
-#             address = request.json.get('address', None)
-#             url = request.json.get('url', None)
-#             phone_number = request.json.get('phone_number', None)
+        name = body.get('name', None)
+        email = body.get('email', None)
+        address = body.get('address', None)
+        url = body.get('url', None)
+        cep = body.get('cep', None)
+        phone_number = body.get('phone_number', None)
+        
+        name_found = Instituicao.objects(name__in=[name]).first()
+        email_found = Instituicao.objects(email__in=[email]).first()
 
-#             instituicao = inst(
-#                 name=name, email=email, address=address, url=url, phone_number=phone_number)
+        if name_found:
+            return 'There already is a institution by that name'
+        if email_found:
+            return 'This email already exists in database'
+        else:
+            institution_input = Instituicao(name=name, email=email, address=address, url=url, cep=cep, phone_number=phone_number)            
+            institution_input.save()
+            return jsonify({'result': 'Institution created!'})
 
-#             db.session.add(instituicao)
-#             db.session.commit()
-
-#             return "Registered!"
-
-#         except IntegrityError:
-#             return "Integrity Error", 400
-
-
-# api.add_resource(Instituicao, '/api/instituicao')
+api.add_resource(RegisterInstituicao, '/api/instituicao')
 
 
-# class InstituicaoById(Resource):
-#     def get(self, id):
-#         instituicao = inst.query.filter_by(id=id).first()
-#         return instituicao
-
-#     def post(self):
-#         try:
-#             name = request.json.get('name', None)
-#             email = request.json.get('email', None)
-#             address = request.json.get('address', None)
-#             url = request.json.get('url', None)
-#             phone_number = request.json.get('phone_number', None)
-
-#             instituicao = inst(
-#                 name=name, email=email, address=address, url=url, phone_number=phone_number)
-
-#             db.session.add(instituicao)
-#             db.session.commit()
-
-#             return "Registered!"
-#         # melhor forma de fazer o except
-#         # ele da except tanto quando os mesmos dados são passados, tanto quando falta algum atributo.
-#         except IntegrityError:
-#             return "Integrity Error", 400
+class InstituicaoById(Resource):
+    def get(self, email):
+        instituicao = Instituicao.objects(email__in=[email]).first()
+        return instituicao.to_json()
 
 
-# api.add_resource(InstituicaoById, '/api/instituicao/<string:id>')
+api.add_resource(InstituicaoById, '/api/instituicao/<string:email>')
 
 
 class Register(Resource):
     def post(self): 
-        name = request.json.get('full_name', None)
-        email = request.json.get('email', None)
-        password = request.json.get('password', None)
-        address = request.json.get('address', None)
-        phone_number = request.json.get('phone_number', None)
-        gender = request.json.get('gender', None)
+        body = json.loads(request.data)
+
+        name = body.get('full_name', None)
+        email = body.get('email', None)
+        password = body.get('password', None)
+        address = body.get('address', None)
+        phone_number = body.get('phone_number', None)
+        gender = body.get('gender', None)
 
         user_found = User.objects(full_name__in=[name]).first()
         email_found = User.objects(email__in=[email]).first()
