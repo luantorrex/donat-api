@@ -4,10 +4,8 @@ from app.initials import initialsToState
 from app.news import callGoogle
 from datetime import date, timedelta
 import json
-# import bcrypt
 from flask_restful import Api, Resource, reqparse
-# from flask_cors import CORS #comment this on deployment
-from flask import redirect, url_for, request, jsonify, render_template, session
+from flask import request, jsonify, session
 from app.models import User, Instituicao
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -16,37 +14,6 @@ defaultDay = date.today()-timedelta(days=1)
 defaultDay = defaultDay.strftime("%m-%d-%Y")
 
 api = Api(app)
-
-
-# @app.route('/api/state/<string:state>')
-# @app.route('/api/state/<string:state>/<string:day>')
-# def showState(state,day=defaultDay):
-#     state = state.upper()
-#     data = dpd(day)
-#     return str(data[state])
-
-# @app.route('/api/date')
-# @app.route('/api/date/<string:day>')
-# def showDate(day=defaultDay):
-#     data = dpd(day)
-#     #import ipdb; ipdb.set_trace()
-#     return str(data)
-
-
-
-# @app.route('/api/state/<string:state>')
-# @app.route('/api/state/<string:state>/<string:day>')
-# def showState(state,day=defaultDay):
-#     state = state.upper()
-#     data = dpd(day)
-#     return str(data[state])
-
-# @app.route('/api/date')
-# @app.route('/api/date/<string:day>')
-# def showDate(day=defaultDay):
-#     data = dpd(day)
-#     #import ipdb; ipdb.set_trace()
-#     return str(data)
 
 
 @app.route('/api/news')

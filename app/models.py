@@ -1,12 +1,7 @@
-# import datetime
-# from marshmallow.fields import Boolean
 from datetime import datetime
 import enum
 from bson.json_util import default
 import mongoengine as me
-# import json
-# from dataclasses import dataclass
-# from flask import jsonify
 
 
 class GenderEnum(enum.Enum):
@@ -31,9 +26,6 @@ class User(me.Document):
 		"phone_number": self.phone_number,
 		"gender": self.gender}
 
-#     def __repr__(self):
-#         return '<User {}>'.format(self.full_name)
-
 
 class Instituicao(me.Document):
 
@@ -46,8 +38,6 @@ class Instituicao(me.Document):
 #   image = me.ImageField(size=(800, 600, True))
     phone_number = me.StringField(required=True)
 
-#     def __repr__(self):
-#         return '<Name {}>'.format(self.name)
     def to_json(self):
         return {"name": self.name,
                 "email": self.email,
