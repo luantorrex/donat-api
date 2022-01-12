@@ -1,6 +1,4 @@
 import requests
-import json
-
 from requests.api import request
 import app.initials as ini
 
@@ -11,7 +9,6 @@ baseurl = 'https://covid19.mathdro.id/api'
 
 #Check if the date on url is the same of the API
 def consumingDataPerDate(date):
-    #import ipdb; ipdb.set_trace()
     dataRequest = requests.get(f'{baseurl}/daily/{date}')
     dataJson = dataRequest.json()
     return filterBrazil(dataJson)
@@ -30,5 +27,4 @@ def filterBrazil(dataJson):
                 'mortos' : row['deaths'],
                 'casos ativos' : row['active']
             }
-            #import ipdb; ipdb.set_trace()
     return dictStates
