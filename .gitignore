@@ -8,3 +8,4 @@ migrations/
 /migrations/
 db.sqlite3
 storage.db
+.env
