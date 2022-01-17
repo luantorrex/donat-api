@@ -85,7 +85,7 @@ api.add_resource(InstituicaoById, "/api/instituicao/<string:email>")
 class Register(Resource):
     def post(self): 
         body = json.loads(request.data)
-
+        print(body)
         name = body.get("full_name", None)
         email = body.get("email", None)
         password = body.get("password", None)
@@ -126,8 +126,9 @@ class Login(Resource):
             
             if check_password_hash(user_found.password, password):
                 session["logged_in"] = True
-                status = True         
+                status = True
             else:
+                print('erro')
                 status = False
             return jsonify({"result": status})
         except:
