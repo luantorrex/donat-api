@@ -10,6 +10,7 @@ class Config:
     """Base config."""
     SECRET_KEY = environ.get('SECRET_KEY')
 
+
 class ProdConfig(Config):
     FLASK_ENV = 'production'
     DEBUG = False
