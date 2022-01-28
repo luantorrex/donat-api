@@ -1,6 +1,5 @@
 from datetime import datetime
 import enum
-from bson.json_util import default
 import mongoengine as me
 
 
@@ -20,11 +19,13 @@ class User(me.Document):
      phone_number = me.StringField(required=True)
      gender = me.EnumField(GenderEnum, required=True)
      def to_json(self):
-        return {"name": self.full_name,
-                "email": self.email,
-		"address": self.address,
-		"phone_number": self.phone_number,
-		"gender": self.gender}
+        return {
+            "_id": str(self.pk),
+            "name": self.full_name,
+            "email": self.email,
+		    "address": self.address,
+		    "phone_number": self.phone_number,
+		    "gender": self.gender}
 
 
 class Instituicao(me.Document):
@@ -39,7 +40,9 @@ class Instituicao(me.Document):
     phone_number = me.StringField(required=True)
 
     def to_json(self):
-        return {"name": self.name,
+        return {
+                "_id": str(self.pk),
+                "name": self.name,
                 "email": self.email,
 		        "address": self.address,
                 "url": self.url,
