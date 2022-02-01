@@ -12,7 +12,7 @@ class User(me.Document):
     
      created_at = me.DateTimeField(default=datetime.utcnow)
      updated_at = me.DateTimeField(default=datetime.utcnow)
-     full_name = me.StringField(required=True)
+     username = me.StringField(required=True)
      email = me.EmailField(unique=True, required=True)
      password = me.StringField()
      address = me.StringField(required=True)

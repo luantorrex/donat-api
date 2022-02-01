@@ -5,9 +5,10 @@ from controller.routes import initialize_routes
 from flask_cors import CORS
 from os import environ
 from helper.errors import errors
+from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
 
 if environ.get('PROD_DATABASE_URI'):
   app.config.from_object('config.ProdConfig')
@@ -18,6 +19,8 @@ api = Api(app, errors=errors)
 
 initialize_db(app)
 initialize_routes(api)
+# app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
+jwt = JWTManager(app)
 
 if __name__ == "__main__":
   app.run()

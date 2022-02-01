@@ -2,6 +2,7 @@ import json
 from flask_restful import Resource
 from flask import Response, request
 from database.models import Instituicao
+from flask_jwt_extended import jwt_required
 # from helper.errors import EmailAlreadyExistsError, InstitutionExistsError
 import re
 
@@ -15,6 +16,7 @@ def remove_oid(string):
                     return string
 
 class Institution(Resource):
+    @jwt_required()
     def get(self):        
         instituicoes = Instituicao.objects().to_json()
         instituicoes = remove_oid(instituicoes)
@@ -44,6 +46,7 @@ class Institution(Resource):
 
 
 class InstituicaoById(Resource):
+    @jwt_required()
     def get(self, id):
         instituicao = Instituicao.objects.get(pk=id)
         return instituicao.to_json()
