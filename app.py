@@ -12,8 +12,10 @@ CORS(app, supports_credentials=True)
 
 if environ.get('PROD_DATABASE_URI'):
   app.config.from_object('config.ProdConfig')
-else:
+elif environ.get('DEV_DATABASE_URI'):
   app.config.from_object('config.DevConfig')
+else:
+  app.config.from_object('config.TestConfig')
 
 api = Api(app, errors=errors)
 

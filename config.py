@@ -36,3 +36,12 @@ class DevConfig(Config):
     JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(days=1)
     JWT_COOKIE_SECURE = False
     JWT_COOKIE_CSRF_PROTECT = False
+    
+class TestConfig(Config):
+    FLASK_ENV = 'testing'
+    DEBUG = True
+    TESTING = True
+    MONGODB_SETTINGS = {'host': 'mongomock://localhost'}
+    JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(days=1)
+    JWT_COOKIE_SECURE = False
+    JWT_COOKIE_CSRF_PROTECT = False
