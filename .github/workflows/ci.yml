@@ -9,8 +9,6 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  DEV_DATABASE_URI: 'mongomock://localhost'
 jobs:
   build:
 
