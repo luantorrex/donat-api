@@ -10,7 +10,7 @@ on:
     branches: [ main ]
 
 env:
-  MONGODB_SETTINGS: 'mongomock://localhost'
+  DEV_DATABASE_URI: 'mongomock://localhost'
 jobs:
   build:
 
