@@ -28,6 +28,9 @@ REGISTER_USER = {
 def client():
     disconnect()
     app.config["TESTING"] = True
+    app.config["SECRET_KEY"] = 'GDtfDCFYjD'
+    app.config["JWT_SECRET_KEY"] = '0D5BB45D5D378F2FB552C502F53AD63BE932AC0887E26FB2314EC0A8DEE46115'
+    app.config["MONGODB_SETTINGS"] = 'mongomock://localhost'
     connect('mongoenginetest', host='mongomock://localhost')
     with app.test_client() as client:
         yield client
