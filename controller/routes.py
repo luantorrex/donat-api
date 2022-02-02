@@ -26,7 +26,7 @@ def initialize_routes(api):
     api.add_resource(Register, "/api/register")
     api.add_resource(Logout, "/api/logout")
     
-    api.add_resource(getLoggedUser, "/get_logged_user")
+    api.add_resource(getLoggedUser, "/api/get_logged_user")
 
 # @app.route("/api/news")
 # @app.route("/api/news/<string:state>")

@@ -1,4 +1,3 @@
-from distutils.log import error
 from http import HTTPStatus
 from http.client import OK
 import json
@@ -71,8 +70,8 @@ class Login(Resource):
                 return response
             else:
                 return Response("Review your Input", mimetype="application/json", status=404)
-        except error:
-            return Response(error, mimetype="application/json", status=500)
+        except:
+            return Response("Something goes wrong", mimetype="application/json", status=500)
 
 
 class Logout(Resource):

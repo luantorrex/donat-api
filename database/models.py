@@ -21,7 +21,7 @@ class User(me.Document):
      def to_json(self):
         return {
             "_id": str(self.pk),
-            "name": self.full_name,
+            "name": self.username,
             "email": self.email,
 		    "address": self.address,
 		    "phone_number": self.phone_number,

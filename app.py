@@ -19,7 +19,6 @@ api = Api(app, errors=errors)
 
 initialize_db(app)
 initialize_routes(api)
-# app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
 jwt = JWTManager(app)
 
 if __name__ == "__main__":
