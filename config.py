@@ -25,7 +25,7 @@ class ProdConfig(Config):
     MONGODB_SETTINGS = {'host': environ.get('PROD_DATABASE_URI')}
     JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(days=1)
     JWT_COOKIE_SECURE = True ## sempre deixar true em prod
-    JWT_COOKIE_SAMESITE = None
+    JWT_COOKIE_SAMESITE = "None"
     JWT_COOKIE_CSRF_PROTECT = True
 
 
