@@ -30,6 +30,7 @@ class Institution(Resource):
         address = body.get("address", None)
         url = body.get("url", None)
         cep = body.get("cep", None)
+        image = body.get("image", None)
         phone_number = body.get("phone_number", None)
         
         name_found = Instituicao.objects(name__in=[name]).first()
@@ -40,7 +41,7 @@ class Institution(Resource):
         if email_found:
             return Response("This email already exists in database", mimetype="application/json", status=400)
         else:
-            institution_input = Instituicao(name=name, email=email, address=address, url=url, cep=cep, phone_number=phone_number)            
+            institution_input = Instituicao(name=name, email=email, address=address, url=url, cep=cep, image=image ,phone_number=phone_number)            
             institution_input.save()
             return Response("Institution Created", mimetype="application/json", status=201)
 
