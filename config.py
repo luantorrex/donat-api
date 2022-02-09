@@ -12,7 +12,6 @@ class Config:
     SECRET_KEY = environ.get('SECRET_KEY')
     JWT_SECRET_KEY =  environ.get('JWT_SECRET_KEY')
     JWT_TOKEN_LOCATION = ['cookies']
-    JWT_REFRESH_TOKEN_EXPIRES = datetime.timedelta(days=15)
     JWT_COOKIE_SAMESITE = "Lax"
     JWT_ACCESS_CSRF_HEADER_NAME = "X-CSRF-TOKEN-ACCESS"
     JWT_REFRESH_CSRF_HEADER_NAME = "X-CSRF-TOKEN-REFRESH"
@@ -34,7 +33,7 @@ class DevConfig(Config):
     DEBUG = True
     TESTING = True
     MONGODB_SETTINGS = {'host': environ.get('DEV_DATABASE_URI')}
-    JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(days=1)
+    JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(minutes=15)
     JWT_COOKIE_SECURE = False
     JWT_COOKIE_CSRF_PROTECT = False
     

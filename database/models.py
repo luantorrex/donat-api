@@ -35,8 +35,7 @@ class Instituicao(me.Document):
     address = me.StringField(required=True)
     url = me.URLField()
     cep = me.StringField()
-#   testar o armazenamento de imagens posteriormente.
-#   image = me.ImageField(size=(800, 600, True))
+    image = me.URLField()
     phone_number = me.StringField(required=True)
 
     def to_json(self):
@@ -47,5 +46,6 @@ class Instituicao(me.Document):
 		        "address": self.address,
                 "url": self.url,
                 "cep": self.cep,
+                "image": self.image,
 		        "phone_number": self.phone_number,
 		        }
