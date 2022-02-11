@@ -13,6 +13,7 @@ class User(me.Document):
      created_at = me.DateTimeField(default=datetime.utcnow)
      updated_at = me.DateTimeField(default=datetime.utcnow)
      username = me.StringField(required=True)
+     icon = me.FileField()
      email = me.EmailField(unique=True, required=True)
      password = me.StringField()
      address = me.StringField(required=True)

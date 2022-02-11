@@ -15,7 +15,7 @@
 
 from controller.auth.auth import Login, Logout, Register
 from controller.institution import InstituicaoById, Institution
-from controller.user import getLoggedUser
+from controller.user import getLoggedUser, profileImage
 
 
 def initialize_routes(api):    
@@ -27,6 +27,8 @@ def initialize_routes(api):
     api.add_resource(Logout, "/api/logout")
     
     api.add_resource(getLoggedUser, "/api/get_logged_user")
+    api.add_resource(profileImage, "/api/profile_image")
+    
 
 # @app.route("/api/news")
 # @app.route("/api/news/<string:state>")
