@@ -8,10 +8,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import (
     create_access_token, unset_jwt_cookies, create_refresh_token, set_refresh_cookies, get_jwt_identity, set_access_cookies,jwt_required
 )
+from PIL import Image as PImage
 # from mongoengine.errors import FieldDoesNotExist, NotUniqueError, DoesNotExist, ValidationError, InvalidQueryError
 
 class Register(Resource):
-    def post(self): 
+    def post(self):
         body = json.loads(request.data)
         
         name = body.get("username", None)
@@ -29,7 +30,15 @@ class Register(Resource):
         if email_found:
             return Response("This email already exists in database", mimetype="application/json", status=400)
         else:
-            user_input = User(username = name, email= email, password = generate_password_hash(password), address = address, phone_number = phone_number, gender = gender)            
+            user_input = User(username = name, email= email, password = generate_password_hash(password), address = address, phone_number = phone_number, gender = gender)
+            my_image = open('./assets/images/icon.png', 'rb')
+            user_input.icon.replace(my_image, filename="icon.jpg")
+            
+            # image = PImage.open(r'./assets/images/icon.png')
+            # image.show()
+            # print(image)
+            # user_input.icon.put(image)
+            # print(user_input.icon)
             user_input.save()
             return Response("User created", mimetype="application/json", status=201)
 
