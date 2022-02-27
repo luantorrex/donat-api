@@ -1,6 +1,7 @@
+from http import HTTPStatus
 import json
 from flask_restful import Resource
-from flask import Response, request
+from flask import Response, jsonify, request
 from flask_jwt_extended import jwt_required
 from database.models import Instituicao
 # from helper.errors import EmailAlreadyExistsError, InstitutionExistsError
@@ -22,9 +23,10 @@ class Institution(Resource):
         instituicoes = remove_oid(instituicoes)
         return Response(instituicoes, mimetype="application/json", status=200)
     
+    @jwt_required()
     def post(self):
         body = json.loads(request.data)
-
+        print(body)
         name = body.get("name", None)
         email = body.get("email", None)
         address = body.get("address", None)
@@ -41,9 +43,15 @@ class Institution(Resource):
         if email_found:
             return Response("This email already exists in database", mimetype="application/json", status=400)
         else:
-            institution_input = Instituicao(name=name, email=email, address=address, url=url, cep=cep, image=image ,phone_number=phone_number)            
+            institution_input = Instituicao(name=name, email=email, address=address, url=url, cep=cep, image=image ,phone_number=phone_number)
+            print(institution_input)           
             institution_input.save()
-            return Response("Institution Created", mimetype="application/json", status=201)
+            return jsonify(
+                {
+                    "message": "Institution created",
+                    "status": HTTPStatus.CREATED
+                }
+            )  
 
 
 class InstituicaoById(Resource):
