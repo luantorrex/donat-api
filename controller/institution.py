@@ -26,7 +26,6 @@ class Institution(Resource):
     @jwt_required()
     def post(self):
         body = json.loads(request.data)
-        print(body)
         name = body.get("name", None)
         email = body.get("email", None)
         address = body.get("address", None)
@@ -44,7 +43,6 @@ class Institution(Resource):
             return Response("This email already exists in database", mimetype="application/json", status=400)
         else:
             institution_input = Instituicao(name=name, email=email, address=address, url=url, cep=cep, image=image ,phone_number=phone_number)
-            print(institution_input)           
             institution_input.save()
             return jsonify(
                 {
