@@ -33,14 +33,14 @@ class Register(Resource):
             user_input = User(username = name, email= email, password = generate_password_hash(password), address = address, phone_number = phone_number, gender = gender)
             my_image = open('./assets/images/icon.png', 'rb')
             user_input.icon.replace(my_image, filename="icon.jpg")
-            
-            # image = PImage.open(r'./assets/images/icon.png')
-            # image.show()
-            # print(image)
-            # user_input.icon.put(image)
-            # print(user_input.icon)
             user_input.save()
-            return Response("User created", mimetype="application/json", status=201)
+            response = jsonify(
+                {
+                    "message": "User created",
+                    "status": HTTPStatus.CREATED
+                }
+            )  
+            return response
 
 
 class Login(Resource):
