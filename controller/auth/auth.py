@@ -8,7 +8,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import (
     create_access_token, unset_jwt_cookies, create_refresh_token, set_refresh_cookies, get_jwt_identity, set_access_cookies,jwt_required
 )
-from PIL import Image as PImage
 # from mongoengine.errors import FieldDoesNotExist, NotUniqueError, DoesNotExist, ValidationError, InvalidQueryError
 
 class Register(Resource):

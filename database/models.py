@@ -1,10 +1,6 @@
 from datetime import datetime
 import enum
-from typing_extensions import Required
 import mongoengine as me
-
-from controller.institution import Institution
-
 
 class GenderEnum(enum.Enum):
     MALE = 'male'
