@@ -1,6 +1,9 @@
 from datetime import datetime
 import enum
+from typing_extensions import Required
 import mongoengine as me
+
+from controller.institution import Institution
 
 
 class GenderEnum(enum.Enum):
@@ -13,6 +16,7 @@ class User(me.Document):
      created_at = me.DateTimeField(default=datetime.utcnow)
      updated_at = me.DateTimeField(default=datetime.utcnow)
      username = me.StringField(required=True)
+     is_admin = me.BooleanField(default=False)
      icon = me.FileField()
      email = me.EmailField(unique=True, required=True)
      password = me.StringField()
@@ -23,17 +27,27 @@ class User(me.Document):
         return {
             "_id": str(self.pk),
             "name": self.username,
+            "isAdmin": self.is_admin,
             "email": self.email,
 		    "address": self.address,
 		    "phone_number": self.phone_number,
 		    "gender": self.gender}
 
+#- TODO ->  lagitude e longitude - double (edited)
+
+class InstitutionEnum(enum.Enum):
+
+    ONG = 'ong'
+    IGREJA_CATOLICA = 'igreja_catolica'
+    IGREJA_PROTESTANTE = 'igreja_protestante'
+    CARIDADE = 'caridade'
 
 class Instituicao(me.Document):
 
     name = me.StringField()
     email = me.EmailField(unique=True, required=True)
     address = me.StringField(required=True)
+    institution_type = me.EnumField(InstitutionEnum, required=True)  
     url = me.URLField()
     cep = me.StringField()
     image = me.URLField()
@@ -48,5 +62,6 @@ class Instituicao(me.Document):
                 "url": self.url,
                 "cep": self.cep,
                 "image": self.image,
+                "institution_type": self.institution_type,
 		        "phone_number": self.phone_number,
 		        }
