@@ -70,7 +70,7 @@ class InstituicaoById(Resource):
             "image": instituicao['image'],
             "institution_type": instituicao['institution_type'],
             "phone_number":instituicao['phone_number'],
-            "latitude": str(lag_long.latitude),
-            "longitude": str(lag_long.longitude)
+            "latitude": lag_long.latitude,
+            "longitude": lag_long.longitude
         }
         return response
