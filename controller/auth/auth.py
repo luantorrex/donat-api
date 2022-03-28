@@ -8,7 +8,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import (
     create_access_token, unset_jwt_cookies, create_refresh_token, set_refresh_cookies, get_jwt_identity, set_access_cookies,jwt_required
 )
-from PIL import Image as PImage
 # from mongoengine.errors import FieldDoesNotExist, NotUniqueError, DoesNotExist, ValidationError, InvalidQueryError
 
 class Register(Resource):
@@ -17,6 +16,7 @@ class Register(Resource):
         
         name = body.get("username", None)
         email = body.get("email", None)
+        is_admin = body.get("is_admin", None)
         password = body.get("password", None)
         address = body.get("address", None)
         phone_number = body.get("phone_number", None)
@@ -30,7 +30,7 @@ class Register(Resource):
         if email_found:
             return Response("This email already exists in database", mimetype="application/json", status=400)
         else:
-            user_input = User(username = name, email= email, password = generate_password_hash(password), address = address, phone_number = phone_number, gender = gender)
+            user_input = User(username = name, email = email, is_admin = is_admin , password = generate_password_hash(password), address = address, phone_number = phone_number, gender = gender)
             my_image = open('./assets/images/icon.png', 'rb')
             user_input.icon.replace(my_image, filename="icon.jpg")
             user_input.save()

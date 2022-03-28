@@ -1,11 +1,14 @@
 from http import HTTPStatus
 import json
 from flask_restful import Resource
+from helper.map_converter import AddressToLagLong
 from flask import Response, jsonify, request
 from flask_jwt_extended import jwt_required
 from database.models import Instituicao
 # from helper.errors import EmailAlreadyExistsError, InstitutionExistsError
 import re
+
+from helper.map_converter import AddressToLagLong
 
 def remove_oid(string):
     while True:
@@ -18,7 +21,7 @@ def remove_oid(string):
 
 class Institution(Resource):
     @jwt_required()
-    def get(self):        
+    def get(self):
         instituicoes = Instituicao.objects().to_json()
         instituicoes = remove_oid(instituicoes)
         return Response(instituicoes, mimetype="application/json", status=200)
@@ -29,6 +32,7 @@ class Institution(Resource):
         name = body.get("name", None)
         email = body.get("email", None)
         address = body.get("address", None)
+        institution_type = body.get("institution_type", None)
         url = body.get("url", None)
         cep = body.get("cep", None)
         image = body.get("image", None)
@@ -42,7 +46,7 @@ class Institution(Resource):
         if email_found:
             return Response("This email already exists in database", mimetype="application/json", status=400)
         else:
-            institution_input = Instituicao(name=name, email=email, address=address, url=url, cep=cep, image=image ,phone_number=phone_number)
+            institution_input = Instituicao(name=name, email=email, address=address, institution_type= institution_type, url=url, cep=cep, image=image ,phone_number=phone_number)
             institution_input.save()
             return jsonify(
                 {
@@ -56,4 +60,17 @@ class InstituicaoById(Resource):
     @jwt_required()
     def get(self, id):
         instituicao = Instituicao.objects.get(pk=id)
-        return instituicao.to_json()
+        lag_long = AddressToLagLong(instituicao['address'])
+        response = {
+            "name": instituicao['name'],
+            "email": instituicao['email'],
+            "address": instituicao['address'],
+            "url": instituicao['url'],
+            "cep": instituicao['cep'],
+            "image": instituicao['image'],
+            "institution_type": instituicao['institution_type'],
+            "phone_number":instituicao['phone_number'],
+            "latitude": lag_long.latitude,
+            "longitude": lag_long.longitude
+        }
+        return response
