@@ -69,6 +69,7 @@ class Login(Resource):
                             "user_id": str(user_found.pk),
                             "user_name": user_found.username,
                             "email": user_found.email,
+                            "is_admin": user_found.is_admin
                         },
                         "access_token": access_token,
                         "refresh_token": refresh_token,
