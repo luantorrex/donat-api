@@ -68,9 +68,10 @@ class InstituicaoById(Resource):
             "url": instituicao['url'],
             "cep": instituicao['cep'],
             "image": instituicao['image'],
-            "institution_type": instituicao['institution_type'],
+            "institution_type": instituicao['institution_type'].value,
             "phone_number":instituicao['phone_number'],
             "latitude": lag_long.latitude,
             "longitude": lag_long.longitude
         }
+        print(response)
         return response

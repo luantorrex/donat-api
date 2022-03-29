@@ -32,7 +32,6 @@ class User(me.Document):
 #- TODO ->  lagitude e longitude - double (edited)
 
 class InstitutionEnum(enum.Enum):
-
     ONG = 'ong'
     IGREJA_CATOLICA = 'catolica'
     IGREJA_PROTESTANTE = 'protestante'
@@ -85,6 +84,6 @@ class RequestInstitution(me.Document):
                 "image": self.image,
                 "institution_type": self.institution_type,
 		        "phone_number": self.phone_number,
-                # "request_text": self.request_text
+                "request_text": self.request_text
 		        }
         
