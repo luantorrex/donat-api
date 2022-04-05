@@ -16,7 +16,7 @@
 from controller.auth.auth import Login, Logout, Register
 from controller.institution import InstituicaoById, Institution
 from controller.user import getLoggedUser, profileImage
-from services.institution_request import deleteInstitutionRequestById, requestInstitutionHandler
+from services.institution_request import deleteInstitutionRequestById, requestInstitutionHandler, requestInstitutionImage
 
 
 def initialize_routes(api):    
@@ -25,6 +25,7 @@ def initialize_routes(api):
     
     api.add_resource(requestInstitutionHandler, "/api/institution_request")
     api.add_resource(deleteInstitutionRequestById, "/api/institution_request/<string:id>")
+    api.add_resource(requestInstitutionImage, "/api/institution_request/reqinstitution_image/<string:id>")
     
     api.add_resource(Login, "/api/login")
     api.add_resource(Register, "/api/register")

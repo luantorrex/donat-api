@@ -1,10 +1,11 @@
 from http import HTTPStatus
+import io
 import json
 from flask_restful import Resource
 from helper.map_converter import AddressToLagLong
-from flask import Response, jsonify, request
+from flask import Response, jsonify, request, send_file
 from flask_jwt_extended import jwt_required
-from database.models import Instituicao
+from database.models import Instituicao, RequestInstitution
 # from helper.errors import EmailAlreadyExistsError, InstitutionExistsError
 import re
 
@@ -29,14 +30,18 @@ class Institution(Resource):
     @jwt_required()
     def post(self):
         body = json.loads(request.data)
-        name = body.get("name", None)
         email = body.get("email", None)
-        address = body.get("address", None)
-        institution_type = body.get("institution_type", None)
-        url = body.get("url", None)
-        cep = body.get("cep", None)
-        image = body.get("image", None)
-        phone_number = body.get("phone_number", None)
+        
+        request_object = RequestInstitution.objects(email__in=[email]).first()
+        obj = request_object.to_json()
+        
+        name = obj['name']
+        address = obj['address']
+        institution_type = obj['institution_type']
+        url = obj['url']
+        cep = obj['cep']
+        image = obj['image']
+        phone_number = obj['phone_number']
         
         name_found = Instituicao.objects(name__in=[name]).first()
         email_found = Instituicao.objects(email__in=[email]).first()
@@ -67,7 +72,7 @@ class InstituicaoById(Resource):
             "address": instituicao['address'],
             "url": instituicao['url'],
             "cep": instituicao['cep'],
-            "image": instituicao['image'],
+            "image": test(id),
             "institution_type": instituicao['institution_type'].value,
             "phone_number":instituicao['phone_number'],
             "latitude": lag_long.latitude,
@@ -75,3 +80,12 @@ class InstituicaoById(Resource):
         }
         print(response)
         return response
+
+def test(id) :
+    instituicao = Instituicao.objects.get(pk=id)
+    image = instituicao.image.read()
+    filename = instituicao.image.filename
+    content_type = instituicao.image.content_type
+    return send_file(io.BytesIO(image), 
+                        attachment_filename=filename, 
+                        mimetype=content_type)

@@ -1,5 +1,7 @@
 from http import HTTPStatus
+import io
 import re
+from textwrap import indent
 from flask import Response, jsonify, request, send_file
 from flask_restful import Resource
 from itsdangerous import json
@@ -25,15 +27,23 @@ class requestInstitutionHandler(Resource):
 
         return Response(request_institutions, mimetype="application/json", status=HTTPStatus.OK)
     
+    def put(self):
+        email = request.form.get("email")
+        image = request.files['icon']
+        
+        institution_input = RequestInstitution.objects(email__in=[email]).first()
+        
+        institution_input.image.replace(image, content_type = 'image/jpeg')
+        institution_input.save()
+    
     def post(self):
         body = json.loads(request.data)
-        name = body.get("name", None)
+        name = body.get("name")
         email = body.get("email")
         address = body.get("address")
         institution_type = body.get("institution_type")
-        url = body.get("url", None)
-        cep = body.get("cep", None)
-        image = body.get("image", None)
+        url = body.get("url")
+        cep = body.get("cep")
         phone_number = body.get("phone_number")
         request_text = body.get("request_text")
         
@@ -42,7 +52,9 @@ class requestInstitutionHandler(Resource):
         if email_found:
             return Response("This email already exists in database", mimetype="application/json", status=HTTPStatus.BAD_REQUEST)
         else:
-            institution_input = RequestInstitution(name=name, email=email, address=address, institution_type= institution_type, url=url, cep=cep, image=image ,phone_number=phone_number, request_text=request_text)
+            institution_input = RequestInstitution(name=name, email=email, address=address, institution_type= institution_type, url=url, cep=cep ,phone_number=phone_number, request_text=request_text)
+            my_image = open('./assets/images/icon.png', 'rb')
+            institution_input.image.replace(my_image, filename="image.jpg")
             institution_input.save()
             return jsonify(
                 {
@@ -50,7 +62,18 @@ class requestInstitutionHandler(Resource):
                     "status": HTTPStatus.CREATED
                 }
             )  
-            
+
+class requestInstitutionImage(Resource):
+    @jwt_required()
+    def get(self, id):
+        institution = RequestInstitution.objects.get(pk=id)
+        image= institution.image.read()
+        filename = institution.image.filename
+        content_type = institution.image.content_type
+        return send_file(io.BytesIO(image), 
+                        attachment_filename=filename, 
+                        mimetype=content_type)
+      
 class deleteInstitutionRequestById(Resource):
     
     @jwt_required()

@@ -45,7 +45,7 @@ class Instituicao(me.Document):
     institution_type = me.EnumField(InstitutionEnum, required=True)  
     url = me.URLField()
     cep = me.StringField()
-    image = me.URLField()
+    image = me.FileField()
     phone_number = me.StringField(required=True)
 
     def to_json(self):
@@ -69,7 +69,7 @@ class RequestInstitution(me.Document):
     institution_type = me.EnumField(InstitutionEnum, required=True)  
     url = me.URLField()
     cep = me.StringField()
-    image = me.URLField()
+    image = me.FileField()
     phone_number = me.StringField(required=True)
     request_text = me.StringField(required=True)
     
