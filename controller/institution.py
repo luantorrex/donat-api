@@ -72,20 +72,21 @@ class InstituicaoById(Resource):
             "address": instituicao['address'],
             "url": instituicao['url'],
             "cep": instituicao['cep'],
-            "image": test(id),
             "institution_type": instituicao['institution_type'].value,
             "phone_number":instituicao['phone_number'],
             "latitude": lag_long.latitude,
             "longitude": lag_long.longitude
         }
-        print(response)
         return response
 
-def test(id) :
-    instituicao = Instituicao.objects.get(pk=id)
-    image = instituicao.image.read()
-    filename = instituicao.image.filename
-    content_type = instituicao.image.content_type
-    return send_file(io.BytesIO(image), 
+class RetrieveInstitutionImage(Resource):
+    @jwt_required()
+    def get(self, id):    
+        instituicao = Instituicao.objects.get(pk=id)
+        image = instituicao.image.read()
+        filename = instituicao.image.filename
+        content_type = instituicao.image.content_type
+        return send_file(io.BytesIO(image), 
                         attachment_filename=filename, 
                         mimetype=content_type)
+        

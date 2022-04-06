@@ -1,5 +1,8 @@
+import base64
 from datetime import datetime
 import enum
+import io
+from flask import send_file
 import mongoengine as me
 
 class GenderEnum(enum.Enum):
