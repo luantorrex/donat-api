@@ -75,7 +75,6 @@ class requestInstitutionImage(Resource):
                         mimetype=content_type)
       
 class deleteInstitutionRequestById(Resource):
-    
     @jwt_required()
     def delete(self, id):
         institution = RequestInstitution.objects.get(pk=id)

@@ -40,7 +40,6 @@ class Institution(Resource):
         institution_type = obj['institution_type']
         url = obj['url']
         cep = obj['cep']
-        image = obj['image']
         phone_number = obj['phone_number']
         
         name_found = Instituicao.objects(name__in=[name]).first()
@@ -51,7 +50,8 @@ class Institution(Resource):
         if email_found:
             return Response("This email already exists in database", mimetype="application/json", status=400)
         else:
-            institution_input = Instituicao(name=name, email=email, address=address, institution_type= institution_type, url=url, cep=cep, image=image ,phone_number=phone_number)
+            institution_input = Instituicao(name=name, email=email, address=address, institution_type= institution_type, url=url, cep=cep, phone_number=phone_number)
+            institution_input.image.put(request_object.image, content_type = 'image/jpeg')
             institution_input.save()
             return jsonify(
                 {
@@ -59,7 +59,6 @@ class Institution(Resource):
                     "status": HTTPStatus.CREATED
                 }
             )  
-
 
 class InstituicaoById(Resource):
     @jwt_required()
@@ -81,7 +80,7 @@ class InstituicaoById(Resource):
 
 class RetrieveInstitutionImage(Resource):
     @jwt_required()
-    def get(self, id):    
+    def get(self, id): 
         instituicao = Instituicao.objects.get(pk=id)
         image = instituicao.image.read()
         filename = instituicao.image.filename
