@@ -88,4 +88,14 @@ class RetrieveInstitutionImage(Resource):
         return send_file(io.BytesIO(image), 
                         attachment_filename=filename, 
                         mimetype=content_type)
-        
+
+
+class RetrieveRandomInstitutions(Resource):
+    def get(self):
+        institutions = []
+        instituicoes = Instituicao.objects().aggregate([{"$sample": { "size": 3 } },
+                                                        {"$addFields": {"id": {"$toString": "$_id"}}},
+                                                        {"$project": {"_id": 0, "image": 0}}])
+        for document in instituicoes:
+            institutions.append(document)
+        return institutions
