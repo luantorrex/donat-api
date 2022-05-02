@@ -21,7 +21,6 @@ def remove_oid(string):
             return string
 
 class Institution(Resource):
-    @jwt_required()
     def get(self):
         instituicoes = Instituicao.objects().to_json()
         instituicoes = remove_oid(instituicoes)

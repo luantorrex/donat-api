@@ -15,6 +15,7 @@ class Config:
     JWT_COOKIE_SAMESITE = "Lax"
     JWT_ACCESS_CSRF_HEADER_NAME = "X-CSRF-TOKEN-ACCESS"
     JWT_REFRESH_CSRF_HEADER_NAME = "X-CSRF-TOKEN-REFRESH"
+    JWT_SESSION_COOKIE = False
 
 
 class ProdConfig(Config):
@@ -22,7 +23,7 @@ class ProdConfig(Config):
     DEBUG = False
     TESTING = False
     MONGODB_SETTINGS = {'host': environ.get('PROD_DATABASE_URI')}
-    JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(days=1)
+    # JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(days=1)
     JWT_COOKIE_SECURE = True ## sempre deixar true em prod
     JWT_COOKIE_SAMESITE = "None"
     JWT_COOKIE_CSRF_PROTECT = True
@@ -33,15 +34,16 @@ class DevConfig(Config):
     DEBUG = True
     TESTING = True
     MONGODB_SETTINGS = {'host': environ.get('DEV_DATABASE_URI')}
-    JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(days=1)
+    # JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(days=1)
     JWT_COOKIE_SECURE = False
     JWT_COOKIE_CSRF_PROTECT = False
+    JWT_SESSION_COOKIE = True
     
 class TestConfig(Config):
     FLASK_ENV = 'testing'
     DEBUG = True
     TESTING = True
     MONGODB_SETTINGS = {'host': 'mongomock://localhost'}
-    JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(days=1)
+    # JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(days=1)
     JWT_COOKIE_SECURE = False
     JWT_COOKIE_CSRF_PROTECT = False

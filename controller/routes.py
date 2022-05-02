@@ -1,4 +1,5 @@
-from controller.auth.auth import Login, Logout, Register
+from controller.auth.auth import Login, Logout, Register, protected
+from controller.boleto import boleto
 from controller.institution import InstituicaoById, Institution, RetrieveInstitutionImage, RetrieveRandomInstitutions
 from controller.user import getLoggedUser, profileImage
 from services.institution_request import deleteInstitutionRequestById, requestInstitutionHandler, requestInstitutionImage
@@ -17,6 +18,9 @@ def initialize_routes(api):
     api.add_resource(Login, "/api/login")
     api.add_resource(Register, "/api/register")
     api.add_resource(Logout, "/api/logout")
+    api.add_resource(protected, "/api/protected")
     
     api.add_resource(getLoggedUser, "/api/get_logged_user")
     api.add_resource(profileImage, "/api/profile_image")
+    
+    api.add_resource(boleto, "/api/get_boleto")

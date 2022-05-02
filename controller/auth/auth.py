@@ -85,12 +85,16 @@ class Login(Resource):
 
 
 class Logout(Resource):
-    # @jwt_required()
     def post(self):
         response = jsonify({'logout': True})
         unset_jwt_cookies(response)
         return response
 
+class protected(Resource):
+    @jwt_required()
+    def get(self):
+        current_user = get_jwt_identity()
+        return jsonify(logged_in_as=current_user), 200
 
 class RefreshAccessTokenResource(Resource):
     @jwt_required(refresh=True)
