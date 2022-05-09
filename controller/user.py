@@ -18,11 +18,9 @@ class getLoggedUser(Resource):
                         "data": {
                             'message':"testando usuario nessa bagaça",
                             "id": str(user.pk),
-                            "username": user.username,
+                            "full_name": user.full_name,
                             "email": user.email,
-                            "address": user.address,
                             "phone_number": user.phone_number,
-                            "gender": str(user.gender.value)
                         },
                     }
                     )  

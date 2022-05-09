@@ -1,4 +1,3 @@
-from geopy.geocoders import Nominatim
 from geopy.geocoders import HereV7
 
 def AddressToLagLong(address):

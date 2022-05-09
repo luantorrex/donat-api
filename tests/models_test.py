@@ -15,11 +15,11 @@ from database.models import User
 #     #    disconnect()
 
 #     def test_thing(self):
-#         pers = User(username = 'John', email= 'test@gmail.com',
+#         pers = User(full_name = 'John', email= 'test@gmail.com',
 #                     password = 'test', address = 'rua teste 123', 
 #                     phone_number = '13996131248', gender = 'male')
 #         pers.save()
 
 #         fresh_pers = User.objects().first()
-#         assert fresh_pers.username ==  'John'
+#         assert fresh_pers.full_name ==  'John'
 #         assert fresh_pers.email ==  'test@gmail.com'

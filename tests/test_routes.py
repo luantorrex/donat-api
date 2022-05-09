@@ -19,7 +19,7 @@ INSTITUTION_OBJ = {
 }
 
 REGISTER_USER = {
-    "username": "test",
+    "full_name": "test",
     "email": "test@test.com",
     "password": "123",
     "address": "rua teste",

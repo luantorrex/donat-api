@@ -1,38 +1,26 @@
-import base64
 from datetime import datetime
 import enum
-import io
-from flask import send_file
 import mongoengine as me
-
-class GenderEnum(enum.Enum):
-    MALE = 'male'
-    FEMALE = 'female'
 
 
 class User(me.Document):
     
      created_at = me.DateTimeField(default=datetime.utcnow)
      updated_at = me.DateTimeField(default=datetime.utcnow)
-     username = me.StringField(required=True)
+     full_name = me.StringField(required=True)
      is_admin = me.BooleanField(default=False)
      icon = me.FileField()
      email = me.EmailField(unique=True, required=True)
      password = me.StringField()
-     address = me.StringField(required=True)
      phone_number = me.StringField(required=True)
-     gender = me.EnumField(GenderEnum, required=True)
      def to_json(self):
         return {
             "_id": str(self.pk),
-            "name": self.username,
+            "name": self.full_name,
             "is_admin": self.is_admin,
             "email": self.email,
-		    "address": self.address,
-		    "phone_number": self.phone_number,
-		    "gender": self.gender}
-
-#- TODO ->  lagitude e longitude - double (edited)
+		    "phone_number": self.phone_number
+        }
 
 class InstitutionEnum(enum.Enum):
     ONG = 'ong'
