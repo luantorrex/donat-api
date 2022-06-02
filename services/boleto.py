@@ -2,7 +2,7 @@ import os
 from flask import after_this_request, request, send_from_directory
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
-from helper import billet_generator
+from resources import billet_generator
 
     
 class boleto(Resource):

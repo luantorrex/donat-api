@@ -30,6 +30,8 @@ class InstitutionEnum(enum.Enum):
 
 class Instituicao(me.Document):
 
+    created_at = me.DateTimeField(default=datetime.utcnow)
+    updated_at = me.DateTimeField(default=datetime.utcnow)
     name = me.StringField()
     email = me.EmailField(unique=True, required=True)
     address = me.StringField(required=True)
@@ -53,7 +55,9 @@ class Instituicao(me.Document):
 		        }
         
 class RequestInstitution(me.Document):
-    
+     
+    created_at = me.DateTimeField(default=datetime.utcnow)
+    updated_at = me.DateTimeField(default=datetime.utcnow)
     name = me.StringField()
     email = me.EmailField(unique=True, required=True)
     address = me.StringField(required=True)

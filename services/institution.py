@@ -2,14 +2,14 @@ from http import HTTPStatus
 import io
 import json
 from flask_restful import Resource
-from helper.map_converter import AddressToLagLong
+from resources.map_converter import AddressToLagLong
 from flask import Response, jsonify, request, send_file
 from flask_jwt_extended import jwt_required
 from database.models import Instituicao, RequestInstitution
 # from helper.errors import EmailAlreadyExistsError, InstitutionExistsError
 import re
 
-from helper.map_converter import AddressToLagLong
+from resources.map_converter import AddressToLagLong
 
 def remove_oid(string):
     while True:
@@ -60,7 +60,7 @@ class Institution(Resource):
             )  
 
 class InstituicaoById(Resource):
-    @jwt_required()
+    # @jwt_required()
     def get(self, id):
         instituicao = Instituicao.objects.get(pk=id)
         lag_long = AddressToLagLong(instituicao['address'])
